@@ -26,7 +26,7 @@ function calculateCheckDigit(digitsAsString) {
 // show a valid ID number generated using the values in the form
 function showIdNumber() {
   const values = [
-    form.year,
+    { value: form.year.value.substring(2, 4) },
     form.month,
     form.day,
     form.gender,
