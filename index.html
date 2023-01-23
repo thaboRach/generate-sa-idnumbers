@@ -1,160 +1,223 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Generate SA ID Numbers</title>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/images/favicon-96.png"
+    />
+    <meta name="title" content="Generate SA ID Numbers" />
+    <meta
+      name="description"
+      content="Generate South African ID numbers for development purposes."
+    />
+    <title>Generate SA ID Numbers</title>
 
-  <script src="https://code.jquery.com/jquery.min.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- OpenGraph meta tags -->
+    <meta
+      property="og:image"
+      content="https://developer.mozilla.org/static/img/opengraph-logo.png"
+    />
+    <meta
+      property="og:description"
+      content="Generate South African ID numbers for development purposes."
+    />
+    <meta
+      property="og:title"
+      content="Generate (Fake) South African ID Numbers"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://developer.mozilla.org/static/img/opengraph-logo.png"
+    />
 
-  <script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <script src="script.js" defer></script>
+  </head>
 
-    // calculates the Lohn digit, see https://en.wikipedia.org/wiki/Luhn_algorithm
-    function calculateCheckDigit(digitsAsString) {
-      //const digits = ('' + dob + gender + sequence + citizenship + eight).split('').map(d => Number(d))
-      const digits = digitsAsString.replace(/\D/g, '').split('').map(d => Number(d))
-      const checkSum = digits.reverse().map((d, ix) => {
-        if (ix % 2 === 0) {
-          d *= 2
-          if (d > 9) {
-            d -= 9
-          }
-        }
-        return d
-      }).reduce((memo, d) => memo += d, 0)
-      return checkSum * 9 % 10
-    }
+  <body class="bg-slate-100">
+    <header class="flex flex-col items-center w-full text-center p-6 mb-4">
+      <h1 class="text-3xl sm:text-5xl font-bold">
+        Generate South African ID Numbers
+      </h1>
+    </header>
 
-    // show a valid ID number generated using the values in the form
-    function showIdNumber() {
+    <main class="flex flex-col gap-8 items-center w-full">
+      <form
+        id="mainForm"
+        name="mainForm"
+        class="flex flex-col gap-y-4 w-full max-w-[350px] p-4 bg-white rounded-md shadow-lg"
+        onsubmit="showIdNumber(); return false"
+      >
+        <section class="flex gap-x-4 items-center w-full">
+          <label class="" for="year">Year of Birth:</label>
+          <select
+            class="w-[180px] h-[35px] text-center text-white bg-orange-600 rounded ml-auto"
+            id="year"
+            name="year"
+          ></select>
+        </section>
 
-      const form = document.forms.f1
-
-      const values = [
-        form.year, form.month, form.day,
-        form.gender,
-        { value: form.sequence.value || '896' /* sequence */ },
-        { value: form.cship.value || '0' /* citizenship */ },
-        { value: '8' /* a */ },
-      ]
-
-      withoutCheckDigit = values.map(e => e.value).join('')
-      const idNumber = withoutCheckDigit + calculateCheckDigit(withoutCheckDigit)
-
-      document.getElementById('result').innerHTML = `<p>${ idNumber }</p>`
-
-    }
-
-    function showExpertOptions() {
-      $('#showExpertOptions').toggle()
-      $('#expertOptions').toggle()
-    }
-
-  </script>
-</head>
-
-<body>
-
-  <div class="container">
-
-    <h3>Generate (Fake) South-African ID Numbers</h1>
-
-    <div class="row">
-      <div class="col-xs-12">
-
-      <form id="f1" name="f1" onsubmit="showIdNumber(); return false">
-
-        <div class="input-group col-xs-12">
-          <label for="year">Year of Birth</label>
-          <select class="form-control" id="year" name="year"></select>
-        </div>
-        <div class="input-group col-xs-12">
+        <section class="flex gap-x-4 w-full">
           <label for="month">Month of Birth</label>
-          <select class="form-control" id="month" name="month"></select>
-        </div>
-        <div class="input-group col-xs-12">
-          <label for="day">Day of Birth</label>
-          <select class="form-control" id="day" name="day"></select>
-        </div>
-        <div class="input-group col-xs-12">
-          <input type="radio" name="gender" id="female" value="4" checked="checked" />
-          <label for="female">Female</label>
-          <br/>
-          <input type="radio" name="gender" id="male" value="5" />
-          <label for="male">Male</label>
-        </div>
+          <select
+            class="w-[90px] h-[35px] text-center text-white bg-orange-600 rounded ml-auto"
+            id="month"
+            name="month"
+          ></select>
+        </section>
 
-        <div id="showExpertOptions">
-          <a href="#" onclick="showExpertOptions()">Show expert options</a>
-        </div>
-        <div style="display: none;" id="expertOptions">
-          <div class="input-group col-xs-12">
-            <label for="sequence">Sequence</label>
-            <select class="form-control" id="sequence" name="sequence"></select>
+        <section class="flex gap-x-4 w-full">
+          <label for="day">Day of Birth</label>
+          <select
+            class="w-[90px] h-[35px] text-center text-white bg-orange-600 rounded ml-auto"
+            id="day"
+            name="day"
+          ></select>
+        </section>
+
+        <section class="flex gap-x-4 w-full">
+          <p>Gender:</p>
+          <div class="flex gap-x-2">
+            <input
+              class="accent-orange-600"
+              type="radio"
+              name="gender"
+              id="female"
+              value="4"
+              checked
+            />
+            <label for="female">Female</label>
           </div>
-          <div class="input-group col-xs-12">
-            <input type="radio" name="cship" id="citizen" value="0" checked="checked" />
+
+          <div class="flex gap-x-2">
+            <input
+              class="accent-orange-600"
+              type="radio"
+              name="gender"
+              id="male"
+              value="5"
+            />
+            <label for="male">Male</label>
+          </div>
+        </section>
+
+        <section class="flex gap-x-4 w-full">
+          <label for="sequence">Sequence</label>
+          <select
+            class="w-[180px] h-[35px] text-center text-white bg-orange-600 rounded ml-auto"
+            id="sequence"
+            name="sequence"
+          ></select>
+        </section>
+
+        <section class="flex gap-x-4">
+          <p>Status:</p>
+          <div class="flex gap-x-2">
+            <input
+              class="accent-orange-600"
+              type="radio"
+              name="cship"
+              id="citizen"
+              value="0"
+              checked
+            />
             <label for="citizen">Citizen</label>
-            <br/>
-            <input type="radio" name="cship" id="resident" value="1" />
+          </div>
+
+          <div class="flex gap-x-2">
+            <input
+              class="accent-orange-600"
+              type="radio"
+              name="cship"
+              id="resident"
+              value="1"
+            />
             <label for="resident">Resident</label>
           </div>
-        </div>
+        </section>
 
-        <input class="btn btn-primary" type="submit" />
-
+        <!-- Button Group -->
+        <section class="flex gap-x-2 justify-end w-full">
+          <button
+            class="w-[120px] h-[35px] bg-white text-black border-2 border-black border-solid rounded"
+            onclick="generateRandomIdNumber(); return false"
+          >
+            Randomise
+          </button>
+          <button
+            type="submit"
+            class="w-[120px] h-[35px] bg-orange-600 text-white rounded self-end"
+            type="submit"
+          >
+            Generate
+          </button>
+        </section>
       </form>
 
-      <h3>Result</h3>
-
-      <div id="result">Hint: submit the form to get an ID number.</div>
-
-        <h3>More Information</h3>
-
-        <p>See <a href="https://en.wikipedia.org/wiki/National_identification_number#South_Africa">Wikipedia</a> or
-          <a href="http://knowles.co.za/generating-south-african-id-numbers/">this article</a>.
+      <!-- RESULT -->
+      <section class="flex flex-wrap gap-4 items-center justify-center p-4">
+        <h3 class="text-2xl font-bold">Result:</h3>
+        <p
+          class="p-3 bg-slate-400 text-white text-center rounded min-w-[220px] shadow-md"
+          id="result"
+        >
+          Hint: Click generate/randomise above.
         </p>
+      </section>
+
+      <!-- MORE INFORMATION -->
+      <section class="flex flex-wrap gap-4 items-center justify-center">
+        <h4 class="text-xl font-bold">More Information</h4>
         <p>
-          Read <a href="https://github.com/Chris927/generate-sa-idnumbers">the code</a>.
+          See
+          <a
+            class="text-orange-600"
+            href="https://en.wikipedia.org/wiki/National_identification_number#South_Africa"
+            >Wikipedia</a
+          >
+          or
+          <a
+            class="text-orange-600"
+            href="http://knowles.co.za/generating-south-african-id-numbers/"
+            >this article</a
+          >.
         </p>
+      </section>
+    </main>
 
-    </div>
-  </div>
-
-  <script>
-
-    // add 'option' elements to the 'select' elements (for year, month, day)
-    function addOptions(id, from, to, toLabel, toValue, defaultValue) {
-      const selectElement = document.getElementById(id)
-      const values = []
-      for (let i = 0; i <= to - from; i++) values[i] = i + from
-      const options = values
-      .map(v => ((v < 10 ? '0' : '') + v))
-      .map(v => {
-        const value = toValue ? toValue(v) : v
-        const isDefault = defaultValue && defaultValue === value
-        const label = toLabel ? toLabel(v) : v
-        return `<option value=${ value } ${ isDefault ? 'selected="selected"' : '' }>${ label }</option>`
-      })
-      selectElement.innerHTML = options.join()
-    }
-
-    const year = new Date().getYear() // need the current year to display age... 2016 yields 116 (thanks to funny JS)
-
-    const pad = function(n) {
-      const str = "" + n
-      const pad = "000"
-      return pad.substring(0, pad.length - str.length) + str
-    }
-
-    addOptions('year', 20, 99, v => `${v} (~${year - Number(v)} years old)`)
-    addOptions('month', 1, 12)
-    addOptions('day', 1, 31)
-    addOptions('sequence', 0, 999, v => pad(v), pad, '800')
-
-  </script>
-
-</body>
+    <footer
+      class="flex flex-wrap gap-x-8 justify-center sm:justify-between items-center w-full p-4 sm:p-8"
+    >
+      <p class="max-w-[250px] text-center sm:text-left">
+        This is created for educational and software testing purposes only. I
+        will not be liable for any misuse.
+      </p>
+      <a
+        href="https://github.com/thaboRach/generate-sa-idnumbers"
+        target="_blank"
+        ><img
+          class="w-[50px] h-[50px]"
+          src="/images/github-64.png"
+          alt="github"
+      /></a>
+    </footer>
+  </body>
 </html>
