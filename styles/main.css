@@ -17,3 +17,16 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+#tooltip {
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: none;
+}
+
+#tooltip[data-show] {
+  display: block;
+}

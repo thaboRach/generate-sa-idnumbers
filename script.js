@@ -1,5 +1,7 @@
 const form = document.forms.mainForm;
-const resultArea = document.getElementById("result");
+const resultArea = document.querySelector("#result");
+const copyIcon = document.querySelector("#copy");
+const tooltip = document.querySelector("#tooltip");
 
 // calculates the Lohn digit, see https://en.wikipedia.org/wiki/Luhn_algorithm
 function calculateCheckDigit(digitsAsString) {
@@ -39,6 +41,8 @@ function showIdNumber() {
   const idNumber = withoutCheckDigit + calculateCheckDigit(withoutCheckDigit);
 
   resultArea.innerHTML = `${idNumber}`;
+  copyIcon.classList.remove("hidden");
+  copyIcon.classList.add("block");
 }
 
 // Generates a random integer between a min and a max
@@ -47,7 +51,6 @@ function getRndInteger(min, max) {
 }
 
 function generateRandomIdNumber() {
-  console.log("click");
   const values = [
     { value: getRndInteger(50, 99) /* year */ },
     { value: ("00" + getRndInteger(1, 12)).slice(-2) /* month */ },
@@ -62,6 +65,8 @@ function generateRandomIdNumber() {
   const idNumber = withoutCheckDigit + calculateCheckDigit(withoutCheckDigit);
 
   resultArea.innerHTML = `${idNumber}`;
+  copyIcon.classList.remove("hidden");
+  copyIcon.classList.add("block");
 }
 
 // add 'option' elements to the 'select' elements (for year, month, day)
@@ -101,3 +106,40 @@ addOptions(
 addOptions("month", 1, 12);
 addOptions("day", 1, 31);
 addOptions("sequence", 0, 999, (v) => pad(v), pad, "800");
+
+function copyToClipboard() {
+  // Copy the text
+  navigator.clipboard.writeText(resultArea.innerHTML);
+  tooltip.innerHTML = "Copied to clipboard!";
+  setTimeout(() => {
+    tooltip.innerHTML = "Click to copy";
+  }, 3000);
+}
+
+// Popper
+const popperInstance = Popper.createPopper(copyIcon, tooltip, {
+  placement: "top",
+});
+
+function show() {
+  tooltip.setAttribute("data-show", "");
+
+  // We need to tell Popper to update the tooltip position
+  // after we show the tooltip, otherwise it will be incorrect
+  popperInstance.update();
+}
+
+function hide() {
+  tooltip.removeAttribute("data-show");
+}
+
+const showEvents = ["mouseenter", "focus"];
+const hideEvents = ["mouseleave", "blur"];
+
+showEvents.forEach((event) => {
+  copyIcon.addEventListener(event, show);
+});
+
+hideEvents.forEach((event) => {
+  copy.addEventListener(event, hide);
+});
